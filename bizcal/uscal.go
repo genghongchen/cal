@@ -175,3 +175,30 @@ func (cal USSettleCal) IsBusinessDay(t time.Time) bool {
 }
 
 // End QuantLib code adaptation
+
+//AdjForBusinessDay take one date and either returns itself
+//if it is already a business day
+//or returns the next business day
+func (cal USSettleCal) AdjForBusinessDay(t time.Time) time.Time {
+	rt := t
+
+	for {
+		if cal.IsBusinessDay(rt) {
+			return rt
+		}
+		rt = rt.AddDate(0, 0, 1)
+	}
+}
+
+//NextBusinessDay takes one day and returns
+//the next business day after that day
+func (cal USSettleCal) NextBusinessDay(t time.Time) time.Time {
+	rt := t
+
+	for {
+		rt = rt.AddDate(0, 0, 1)
+		if cal.IsBusinessDay(rt) {
+			return rt
+		}
+	}
+}
