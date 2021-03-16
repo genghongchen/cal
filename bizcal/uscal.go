@@ -4,6 +4,35 @@ import (
 	"time"
 )
 
+/*
+This part of the code is a golang adaptation of the QuantLib project
+Calendar implementation, originally written in C++
+
+It uses the QuantLib license as described and linked below
+*/
+
+/*
+ Copyright (C) 2006 Piter Dias
+ Copyright (C) 2011 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
+/*
+End QuantLib license text
+*/
+
 //USCal for all US holidays
 //has all BasicCal methods
 type USCal struct {
@@ -144,3 +173,5 @@ func (cal USSettleCal) IsBusinessDay(t time.Time) bool {
 
 	return true
 }
+
+// End QuantLib code adaptation
