@@ -138,7 +138,6 @@ func (cal USSettleCal) IsBusinessDay(t time.Time) bool {
 		cal.IsVeteransDay(y, m, d, w) ||
 		cal.IsThanksgiving(y, m, d, w) ||
 		cal.IsChristmas(y, m, d, w) {
-		// holidays
 		return false
 	}
 
