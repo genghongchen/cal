@@ -276,7 +276,7 @@ func (cal USFedCal) IsBusinessDay(t time.Time) bool {
 //AdjForBusinessDay take one date and either returns itself
 //if it is already a business day
 //or returns the next business day
-func (cal USSettleCal) AdjForBusinessDay(t time.Time) time.Time {
+func AdjForBusinessDay(cal BizCal, t time.Time) time.Time {
 	rt := t
 
 	for {
@@ -289,7 +289,7 @@ func (cal USSettleCal) AdjForBusinessDay(t time.Time) time.Time {
 
 //NextBusinessDay takes one day and returns
 //the next business day after that day
-func (cal USSettleCal) NextBusinessDay(t time.Time) time.Time {
+func NextBusinessDay(cal BizCal, t time.Time) time.Time {
 	rt := t
 
 	for {
