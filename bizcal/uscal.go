@@ -76,6 +76,14 @@ func (cal USCal) IsPresidentsDay(y int, m time.Month, d int, w time.Weekday) boo
 	}
 }
 
+//IsGoodFriday checks for Good Friday
+func (cal USCal) IsGoodFriday(y int, dd int) bool {
+	// get Easter Monday for that year first
+	em := cal.EasterMonday(y)
+	// dd is day in year, the ddth day of year y
+	return dd == em-3
+}
+
 //IsMemorialDay checks for Memorial Day
 func (cal USCal) IsMemorialDay(y int, m time.Month, d int, w time.Weekday) bool {
 	if y >= 1971 {
