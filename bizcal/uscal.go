@@ -238,6 +238,39 @@ func (cal USGovBondCal) IsBusinessDay(t time.Time) bool {
 	return true
 }
 
+//USFedCal, calendar for US Settlement
+//has all USCal methods
+//It also satisfies BizCal interface
+type USFedCal struct {
+	USCal
+}
+
+//IsBusinessDay checks for business day according to Federal Reserve Calendar
+func (cal USFedCal) IsBusinessDay(t time.Time) bool {
+	if cal.IsWeekend(t) {
+		return false
+	}
+
+	y, m, d := t.Date()
+	w := t.Weekday()
+
+	if cal.IsNewYearsDay(y, m, d, w) ||
+		cal.IsMLKDay(y, m, d, w) ||
+		cal.IsPresidentsDay(y, m, d, w) ||
+		cal.IsMemorialDay(y, m, d, w) ||
+		cal.IsIndependenceDay(y, m, d, w) ||
+		cal.IsLaborDay(y, m, d, w) ||
+		cal.IsColumbusDay(y, m, d, w) ||
+		cal.IsVeteransDayNoSaturday(y, m, d, w) ||
+		cal.IsThanksgiving(y, m, d, w) ||
+		cal.IsChristmas(y, m, d, w) {
+		// holidays
+		return false
+	}
+
+	return true
+}
+
 // End QuantLib code adaptation
 
 //AdjForBusinessDay take one date and either returns itself
