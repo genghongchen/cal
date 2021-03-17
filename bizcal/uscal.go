@@ -130,6 +130,18 @@ func (cal USCal) IsVeteransDay(y int, m time.Month, d int, w time.Weekday) bool 
 	}
 }
 
+//IsVeteransDayNoSaturday checks for Veteran's Day
+func (cal USCal) IsVeteransDayNoSaturday(y int, m time.Month, d int, w time.Weekday) bool {
+	if y <= 1970 || y >= 1978 {
+		// November 11th, as adjusted, but no Saturday to Friday adjustment
+		return m == time.November && (d == 11 ||
+			(d == 12 && w == time.Monday))
+	} else {
+		// fourth Monday in October
+		return m == time.October && (d >= 22 && d <= 28) && w == time.Monday
+	}
+}
+
 //IsThanksgiving checks for Thanksgiving Day
 func (cal USCal) IsThanksgiving(y int, m time.Month, d int, w time.Weekday) bool {
 	// Thanksgiving Day (fourth Thursday in November)
@@ -176,6 +188,50 @@ func (cal USSettleCal) IsBusinessDay(t time.Time) bool {
 		cal.IsThanksgiving(y, m, d, w) ||
 		cal.IsChristmas(y, m, d, w) {
 		// holidays
+		return false
+	}
+
+	return true
+}
+
+//USGovBondCal, calendar for US Government bonds
+//has all USCal methods
+//It also satisfies BizCal interface
+type USGovBondCal struct {
+	USCal
+}
+
+//IsBusinessDay checks for business day according to US Settlement Calendar
+func (cal USGovBondCal) IsBusinessDay(t time.Time) bool {
+	if cal.IsWeekend(t) {
+		return false
+	}
+
+	y, m, d := t.Date()
+	w := t.Weekday()
+	dd := t.YearDay()
+
+	if cal.IsNewYearsDay(y, m, d, w) ||
+		cal.IsMLKDay(y, m, d, w) ||
+		cal.IsPresidentsDay(y, m, d, w) ||
+		(y != 2015 && cal.IsGoodFriday(y, dd)) ||
+		cal.IsMemorialDay(y, m, d, w) ||
+		cal.IsIndependenceDay(y, m, d, w) ||
+		cal.IsLaborDay(y, m, d, w) ||
+		cal.IsColumbusDay(y, m, d, w) ||
+		cal.IsVeteransDayNoSaturday(y, m, d, w) ||
+		cal.IsThanksgiving(y, m, d, w) ||
+		cal.IsChristmas(y, m, d, w) {
+		// holidays
+		return false
+	}
+
+	// Special closings
+	if (y == 2018 && m == time.December && d == 5) || // President Bush's Funeral
+		// Hurricane Sandy
+		(y == 2012 && m == time.October && (d == 30)) ||
+		// President Reagan's funeral
+		(y == 2004 && m == time.June && d == 11) {
 		return false
 	}
 
