@@ -8,6 +8,7 @@ import (
 type BaseCal interface {
 	IsWeekday(t time.Time) bool
 	IsWeekend(t time.Time) bool
+	IsLeapYear(year int) bool
 	EasterMonday(year int) int
 	OrthodoxEasterMonday(year int) int
 }
@@ -28,6 +29,12 @@ func (cal BasicCal) IsWeekend(t time.Time) bool {
 //IsWeekday checks if a particular day is a weekday
 func (cal BasicCal) IsWeekday(t time.Time) bool {
 	return !(cal.IsWeekend(t))
+}
+
+//IsLeapYear checks if a particular year is a leap year
+func (cal BasicCal) IsLeapYear(year int) bool {
+	yearEnd := time.Date(year, 12, 31, 0, 0, 0, 0, time.UTC)
+	return (yearEnd.YearDay() > 365)
 }
 
 /*
