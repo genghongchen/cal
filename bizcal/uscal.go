@@ -45,8 +45,7 @@ func (cal USCal) IsNewYearsDay(y int, m time.Month, d int, w time.Weekday) bool 
 	// Could be following Monday
 	// Or preceeding Friday
 	if (d == 1 && m == time.January) ||
-		(d == 2 && m == time.January && w == time.Monday) ||
-		(d == 31 && m == time.December && w == time.Friday) {
+		(d == 2 && m == time.January && w == time.Monday) {
 		return true
 	}
 
@@ -178,6 +177,9 @@ func (cal USSettleCal) IsBusinessDay(t time.Time) bool {
 	w := t.Weekday()
 
 	if cal.IsNewYearsDay(y, m, d, w) ||
+		// only for US Settlement Calendar
+		// Preceeding 12/31 if 1/1 is on Saturday
+		(d == 31 && m == time.December && w == time.Friday) ||
 		cal.IsMLKDay(y, m, d, w) ||
 		cal.IsPresidentsDay(y, m, d, w) ||
 		cal.IsMemorialDay(y, m, d, w) ||
@@ -258,12 +260,16 @@ func (cal USFedCal) IsBusinessDay(t time.Time) bool {
 		cal.IsMLKDay(y, m, d, w) ||
 		cal.IsPresidentsDay(y, m, d, w) ||
 		cal.IsMemorialDay(y, m, d, w) ||
-		cal.IsIndependenceDay(y, m, d, w) ||
+		// a little bit different for independence day
+		// no 7/3 holiday if 7/4 is a Saturday
+		(m == time.July && (d == 4 || (d == 5 && w == time.Monday))) ||
 		cal.IsLaborDay(y, m, d, w) ||
 		cal.IsColumbusDay(y, m, d, w) ||
 		cal.IsVeteransDayNoSaturday(y, m, d, w) ||
 		cal.IsThanksgiving(y, m, d, w) ||
-		cal.IsChristmas(y, m, d, w) {
+		// subtle difference for Christmas too
+		// no 12/24 holiday if 12/25 is a Saturday
+		(m == time.December && (d == 25 || (d == 26 && w == time.Monday))) {
 		// holidays
 		return false
 	}

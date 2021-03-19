@@ -9,6 +9,7 @@ type BaseCal interface {
 	IsWeekday(t time.Time) bool
 	IsWeekend(t time.Time) bool
 	EasterMonday(year int) int
+	OrthodoxEasterMonday(year int) int
 }
 
 //Basic Calendar satisfies BaseCal interface
