@@ -196,6 +196,48 @@ func (cal USSettleCal) IsBusinessDay(t time.Time) bool {
 	return true
 }
 
+//USLiborCal, calendar for US Libor
+//has all USCal methods
+//It also satisfies BizCal interface
+type USLiborCal struct {
+	USCal
+}
+
+//IsBusinessDay checks for business day according to US Settlement Calendar
+func (cal USLiborCal) IsBusinessDay(t time.Time) bool {
+	if cal.IsWeekend(t) {
+		return false
+	}
+
+	y, m, d := t.Date()
+	w := t.Weekday()
+
+	// Since 2015 Independence Day only impacts Libor if it falls
+	// on a weekday
+	if m == time.July && y >= 2015 && d != 4 {
+		return true
+	}
+
+	if cal.IsNewYearsDay(y, m, d, w) ||
+		// only for US Settlement Calendar
+		// Preceeding 12/31 if 1/1 is on Saturday
+		(d == 31 && m == time.December && w == time.Friday) ||
+		cal.IsMLKDay(y, m, d, w) ||
+		cal.IsPresidentsDay(y, m, d, w) ||
+		cal.IsMemorialDay(y, m, d, w) ||
+		cal.IsIndependenceDay(y, m, d, w) ||
+		cal.IsLaborDay(y, m, d, w) ||
+		cal.IsColumbusDay(y, m, d, w) ||
+		cal.IsVeteransDay(y, m, d, w) ||
+		cal.IsThanksgiving(y, m, d, w) ||
+		cal.IsChristmas(y, m, d, w) {
+		// holidays
+		return false
+	}
+
+	return true
+}
+
 //USGovBondCal, calendar for US Government bonds
 //has all USCal methods
 //It also satisfies BizCal interface
